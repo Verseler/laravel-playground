@@ -10,15 +10,15 @@ class Bed extends Model
     /** @use HasFactory<\Database\Factories\BedFactory> */
     use HasFactory;
 
-    protected $fillable = ['room_id', 'reservation_id'];
+    protected $fillable = ['room_id', 'status'];
 
     public function room()
     {
         return $this->belongsTo(Room::class);
     }
 
-    public function reservation()
+    public function guest()
     {
-        return $this->belongsTo(Reservation::class);
+        return $this->hasOne(Guest::class);
     }
 }

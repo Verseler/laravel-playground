@@ -48,51 +48,50 @@ class ReservationController extends Controller
                 ]);
 
                 // --- Assign Guests and Beds ---
-                $this->assignGuestsToBeds($validated['total_male'], 'male', $reservation);
-                $this->assignGuestsToBeds($validated['total_female'], 'female', $reservation);
+                $this->assignBeds($validated['total_male'], 'male', $reservation);
+                $this->assignBeds($validated['total_female'], 'female', $reservation);
 
-                return redirect()->back()->with('success', 'Reservation created successfully!');
             });
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 422);
         }
-
+        dd('success');
         return redirect()->back()->with('success', 'Reservation successfully created and beds assigned!');
     }
 
-    private function assignGuestsToBeds($totalGuests, $gender, $reservation)
+    private function assignBeds(int $count, string $gender, Reservation $reservation): void
     {
-        for ($i = 0; $i < $totalGuests; $i++) {
-            // Find an available bed in a room that is either "any" or matches the gender
-            $bed = Bed::where('status', 'available')
-                ->whereHas('room', function ($query) use ($gender) {
-                    $query->where('eligible_gender', 'any')
-                        ->orWhere('eligible_gender', $gender);
-                })
-                ->first();
+        if ($count === 0) {
+            return;
+        }
 
-            if (!$bed) {
-                throw new \Exception("No available bed for a $gender guest.");
-            }
 
+        $beds = Bed::where('status', 'available')
+            ->whereHas('room', function ($query) use ($gender) {
+                $query->whereIn('eligible_gender', ['any', $gender]);
+            })
+            ->take($count)
+            ->get();
+
+        if ($beds->count() < $count) {
+            throw new \Exception("Not enough available beds for {$gender} guests.");
+        }
+
+        foreach ($beds as $bed) {
             $room = $bed->room;
 
-            // If the room is still 'any', change it to the guest's gender
             if ($room->eligible_gender === 'any') {
-                dd($room);
                 $room->update(['eligible_gender' => $gender]);
             }
 
-            // Assign the guest
-            $guest = Guest::create([
+            Guest::create([
                 'display_name' => "{$reservation->first_name} {$reservation->last_name}",
                 'gender' => $gender,
                 'reservation_id' => $reservation->id,
                 'bed_id' => $bed->id,
-                //'office_id' => null, // Can be linked to an office if needed
+                'office_id' => null,
             ]);
 
-            // Mark the bed as occupied
             $bed->update([
                 'reservation_id' => $reservation->id,
                 'status' => 'occupied',

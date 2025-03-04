@@ -11,20 +11,15 @@ class Reservation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'guest_id',
-        'check_in',
-        'check_out',
+        'check_in_date',
+        'check_out_date',
         'total_male',
         'total_female',
+        'status',
     ];
 
-    public function guest()
+    public function guests()
     {
-        return $this->belongsTo(Guest::class);
-    }
-
-    public function beds()
-    {
-        return $this->hasMany(Bed::class);
+        return $this->hasMany(Guest::class);
     }
 }

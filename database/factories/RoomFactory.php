@@ -17,8 +17,7 @@ class RoomFactory extends Factory
     public function definition(): array
     {
         return [
-            'designated_gender' => 'any',
-            'capacity' => '10',
+            'eligible_gender' => 'any',
         ];
     }
 }

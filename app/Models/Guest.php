@@ -10,10 +10,15 @@ class Guest extends Model
     /** @use HasFactory<\Database\Factories\GuestFactory> */
     use HasFactory;
 
-    protected $fillable = ['first_name', 'last_name', 'email', 'phone'];
+    protected $fillable = ['display_name', 'gender', 'reservation_id', 'bed_id'];
 
-    public function reservations()
+    public function reservation()
     {
-        return $this->hasMany(Reservation::class);
+        $this->belongsTo(Reservation::class);
+    }
+
+    public function bed()
+    {
+        $this->belongsTo(Bed::class);
     }
 }

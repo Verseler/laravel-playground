@@ -13,8 +13,7 @@ return new class extends Migration {
         Schema::create('beds', function (Blueprint $table) {
             $table->id();
             $table->foreignId('room_id')->constrained()->onDelete('cascade');
-            // Null when the bed is free; set when booked by a reservation
-            $table->foreignId('reservation_id')->nullable()->constrained()->onDelete('set null');
+            $table->string('status');
             $table->timestamps();
         });
     }

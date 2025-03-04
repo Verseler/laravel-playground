@@ -12,9 +12,7 @@ return new class extends Migration {
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            // Initially null until the first bed is booked
-            $table->enum('designated_gender', ['male', 'female'])->nullable();
-            $table->unsignedInteger('capacity');
+            $table->enum('eligible_gender', ['any', 'male', 'female'])->nullable();
             $table->timestamps();
         });
     }

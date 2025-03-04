@@ -10,7 +10,7 @@ class Room extends Model
     /** @use HasFactory<\Database\Factories\RoomFactory> */
     use HasFactory;
 
-    protected $fillable = ['designated_gender', 'capacity'];
+    protected $fillable = ['eligible_gender', 'status'];
 
     public function beds()
     {

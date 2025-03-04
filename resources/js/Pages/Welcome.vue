@@ -23,13 +23,14 @@ const form = useForm({
     last_name: 'l',
     email: 'a@gmail.com',
     phone: '0901232123',
-    check_in: '2025-03-04',
-    check_out: '2025-03-05',
+    check_in_date: '2025-03-04',
+    check_out_date: '2025-03-05',
     total_male: 1,
     total_female: 2,
 });
 
 function submit() {
+    console.log(1);
     form.post(route('reservation.create'));
 }
 </script>
@@ -54,7 +55,7 @@ function submit() {
             </Link>
         </div>
 
-        <main @submit.prevent="submit">
+        <main>
             <form @submit.prevent="submit">
                 <div>
                     <label>First Name:</label>
@@ -74,11 +75,11 @@ function submit() {
                 </div>
                 <div>
                     <label>Check In:</label>
-                    <input type="date" v-model="form.check_in" />
+                    <input type="date" v-model="form.check_in_date" />
                 </div>
                 <div>
                     <label>Check Out:</label>
-                    <input type="date" v-model="form.check_out" />
+                    <input type="date" v-model="form.check_out_date" />
                 </div>
                 <div>
                     <label>Total Males:</label>
